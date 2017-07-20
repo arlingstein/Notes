@@ -1,0 +1,174 @@
+Angular Building Blocks
+------------------------
+Modules
+Components
+Directives
+Routing
+Services
+
+
+Components metadata
+-------------------
+template
+templateUrl
+styleUrl
+
+
+TestBed
+-------
+
+
+NgModule
+---------
+declerations //registering components
+bootstrap
+imports //importing modules
+
+Don't forget to register component in a Module
+
+
+One Property Way Data-Binding
+-------
+Examples:
+  <h1 [innerHTML] ="<property>"></h1>
+
+  <img [src]= "<source_of_logo>" > </src>
+
+  <input type="text" [value]="<value_for_input>" >
+
+
+Event Binding
+-------------
+(blur) = "handleBlur($event)"
+Examples:
+  <input type="text" (blur)="handleBlur($event)">
+
+
+Two Way Data Binding
+--------------------
+[ngModel] = "<property>"
+(ngModelChange)="event_handler>
+     or
+[(ngModel)]="name"
+
+
+
+Might be better to use one way data binding and event binding together
+   (blur)
+
+Template Ref Variable
+---------------------
+What are stateful and stateless components? (smart and dumb componenets)
+
+
+
+
+How to pass input from parent component to child component and vice versa
+--------------------------------------------------------------------------
+lets say we have a parent component with selector:parent-comp, and variable: randomVar: SomeType, and a function parentFunction()
+lets say we have a child component with selector: child-comp and variable: @Input() inputVar: SomeType, @Output() outputVar = new EventEmitter()
+
+Soltuion for Input: 
+  In the parent component's template this should appear:
+  <child-comp [inputVar]="SomeType"></child-comp>
+
+Solution for Output:
+  In the child's component's function that is emitting the event should include this line of code: this.outputVar.emit(<thing_to_be_emitted>);
+  Go to the parent component's template this should appear:
+  <child-comp (outputVar)="parentFunction($event)"></child-comp>
+
+
+Structural Directives
+---------------------
+*ngIf="boolean_expression"
+*ngFor="let item of Items"
+   Example:
+   <li *ngFor="let item of items; let i = index">
+    {{i}} {{item}}
+   </li>
+
+Adding CSS Dynamically
+----------------------
+For this use ngClass
+[ngClass]="{'<css_class1>':<boolean_expression>, '<css_class2>': <boolean_expression2>}"
+//Whichever boolean expression evaluates to true, that is the class that will be added
+
+
+Building a Custom Attribute Directive: import {Directive, HostBinding} from '@angular/core'
+------------------------------------------------------------------------------
+@Directive({
+  selector: selector_name
+})
+export class CustomAttrDirective{
+   @HostBinding('class.<name_you_want>') name_you_want = true;
+}
+
+
+@HostListener Example
+---------------------
+@Directive({
+  selector: `[appConfirm]`
+})
+export class ConfirmDirective {
+  @HostListener('click', ['$event'])
+  confirmFirst(event: Event) {
+    return window.confirm('Are you sure you want to do this?');
+  }
+}
+
+Input with setter method
+------------------------
+@Input set <name_of_directive_selector>(value){}
+
+Built in angular Pipes
+----------------------
+slice: <start_number> : <end_number>
+date: 'shortDate'
+uppercase
+
+Creating Custom Pipes
+----------------------
+import {Pipe} from '@angular/core';
+
+@Pipe({
+name: 'categoryList',
+pure: true
+})
+export class CustomPipe{ 
+  transform(){ } 
+}
+
+Routing
+--------
+import {Routes} from '@angular/router'
+First declare an array of routes:
+  
+  const appRoutes: Routes = [
+  { path: 'crisis-center', component: CrisisListComponent },
+  { path: 'hero/:id',      component: HeroDetailComponent },
+  { path: 'heroes', component: HeroListComponent, data: { title: 'Heroes List' }},
+  { path: '', redirectTo: '/heroes', pathMatch: 'full'},
+  { path: '**', component: PageNotFoundComponent }
+ ]
+
+The next thing is within your app.module.ts:
+@NgModule({
+  imports: [
+    RouterModule.forRoot(
+      appRoutes,
+      { enableTracing: true } // <-- debugging purposes only
+    )
+    // other imports here
+  ],
+  ...
+
+Last step is to set the router oulet selector in the app.component.html
+<router-outlet></router-outlet>
+
+
+Using Router Links
+------------------
+Example:
+  <a routerLink="/" <img src="contact.png"/> </a>
+  <a routerLink="/all" <img src="all.png"/> </a>
+
